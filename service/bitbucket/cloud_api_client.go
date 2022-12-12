@@ -106,6 +106,9 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 		Execute()
 
 	if err := c.checkAPIError(err, resp, http.StatusOK); err != nil {
+		if be, ok := err.(interface{ Body() []byte }); ok {
+			fmt.Println("body is", string(be.Body()))
+		}
 		return fmt.Errorf("failed to create code insights annotations (%s): %w", resp.Request.URL, err)
 	}
 
@@ -120,7 +123,6 @@ func (c *CloudAPIClient) checkAPIError(err error, resp *http.Response, expectedC
 
 	if resp != nil && resp.StatusCode != expectedCode {
 		body, _ := io.ReadAll(resp.Body)
-		fmt.Println("body is", string(body))
 		return UnexpectedResponseError{
 			Code: resp.StatusCode,
 			Body: body,
