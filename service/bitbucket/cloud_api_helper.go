@@ -14,6 +14,7 @@ type CloudAPIHelper struct{}
 // BuildReport builds Code Insights API report object
 func (c *CloudAPIHelper) BuildReport(req *ReportRequest) bbapi.Report {
 	data := bbapi.NewReport()
+	data.SetType("report")
 	data.SetTitle(req.Title)
 	data.SetReportType(req.Type)
 	data.SetReporter(req.Reporter)
