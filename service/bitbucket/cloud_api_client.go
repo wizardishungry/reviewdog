@@ -107,7 +107,7 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 		Execute()
 
 	if err := c.checkAPIError(err, resp, http.StatusOK); err != nil {
-		var bodyErr interface{ Body() string }
+		var bodyErr interface{ Body() []byte }
 		if errors.As(err, &bodyErr) {
 			fmt.Println("body is", string(bodyErr.Body()))
 		}
@@ -118,6 +118,11 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 }
 
 func (c *CloudAPIClient) checkAPIError(err error, resp *http.Response, expectedCode int) error {
+
+	var bodyErr interface{ Body() []byte }
+	if errors.As(err, &bodyErr) {
+		fmt.Println("body is", string(bodyErr.Body()))
+	}
 
 	if err != nil {
 		return fmt.Errorf("bitbucket Cloud API error: %w", err)
