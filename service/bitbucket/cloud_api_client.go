@@ -106,9 +106,6 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 		Execute()
 
 	if err := c.checkAPIError(err, resp, http.StatusOK); err != nil {
-		if ure, ok := err.(UnexpectedResponseError); ok {
-			fmt.Println("body is", string(ure.Body))
-		}
 		return fmt.Errorf("failed to create code insights annotations (%s): %w", resp.Request.URL, err)
 	}
 
@@ -116,12 +113,13 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 }
 
 func (c *CloudAPIClient) checkAPIError(err error, resp *http.Response, expectedCode int) error {
+	body, _ := io.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println("body is", string(body))
 		return fmt.Errorf("bitbucket Cloud API error: %w", err)
 	}
 
 	if resp != nil && resp.StatusCode != expectedCode {
-		body, _ := io.ReadAll(resp.Body)
 
 		return UnexpectedResponseError{
 			Code: resp.StatusCode,
