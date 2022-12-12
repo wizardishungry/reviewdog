@@ -106,7 +106,10 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 		Execute()
 
 	if err := c.checkAPIError(err, resp, http.StatusOK); err != nil {
-		return fmt.Errorf("failed to create code insights annotations (%s): %w", resp.Request.RequestURI, err)
+		if ure, ok := err.(UnexpectedResponseError); ok {
+			fmt.Println("body is", string(ure.Body))
+		}
+		return fmt.Errorf("failed to create code insights annotations (%s): %w", resp.Request.URL, err)
 	}
 
 	return nil
