@@ -36,6 +36,7 @@ func (c *CloudAPIHelper) BuildAnnotations(comments []*reviewdog.Comment) []bbapi
 
 func (c *CloudAPIHelper) buildAnnotation(comment *reviewdog.Comment) bbapi.ReportAnnotation {
 	data := bbapi.NewReportAnnotation()
+	data.SetType("annotation") // anything not an empty string
 	data.SetExternalId(externalIDFromDiagnostic(comment.Result.Diagnostic))
 	data.SetAnnotationType(annotationTypeCodeSmell)
 	data.SetSummary(comment.Result.Diagnostic.GetMessage())
