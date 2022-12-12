@@ -109,7 +109,7 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 		if be, ok := err.(interface{ Body() []byte }); ok {
 			fmt.Println("body is", string(be.Body()))
 		}
-		return fmt.Errorf("failed to create code insights annotations (%s): %w", resp.Request.URL, err)
+		return fmt.Errorf("failed to create code insights annotations (%s): %w %T", resp.Request.URL, err, err)
 	}
 
 	return nil
