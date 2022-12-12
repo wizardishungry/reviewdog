@@ -113,14 +113,14 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 }
 
 func (c *CloudAPIClient) checkAPIError(err error, resp *http.Response, expectedCode int) error {
-	body, _ := io.ReadAll(resp.Body)
+
 	if err != nil {
-		fmt.Println("body is", string(body))
 		return fmt.Errorf("bitbucket Cloud API error: %w", err)
 	}
 
 	if resp != nil && resp.StatusCode != expectedCode {
-
+		body, _ := io.ReadAll(resp.Body)
+		fmt.Println("body is", string(body))
 		return UnexpectedResponseError{
 			Code: resp.StatusCode,
 			Body: body,
