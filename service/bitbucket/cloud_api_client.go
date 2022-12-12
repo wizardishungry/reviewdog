@@ -92,7 +92,7 @@ func (c *CloudAPIClient) CreateOrUpdateReport(ctx context.Context, req *ReportRe
 		Execute()
 
 	if err := c.checkAPIError(err, resp, http.StatusOK); err != nil {
-		return fmt.Errorf("failed to create code insights report: %w", err)
+		return fmt.Errorf("failed to create code insights report (%s): %w", resp.Request.RequestURI, err)
 	}
 
 	return nil
