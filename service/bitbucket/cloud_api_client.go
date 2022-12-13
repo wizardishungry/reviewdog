@@ -87,6 +87,11 @@ func NewCloudAPIClientWithConfigurations(client *http.Client, server bbapi.Serve
 
 // CreateOrUpdateReport creates or updates specified report
 func (c *CloudAPIClient) CreateOrUpdateReport(ctx context.Context, req *ReportRequest) error {
+
+	_, _ = c.cli.
+		ReportsApi.DeleteReport(ctx, req.Owner, req.Repository, req.Commit, req.ReportID).
+		Execute()
+
 	_, resp, err := c.cli.
 		ReportsApi.CreateOrUpdateReport(ctx, req.Owner, req.Repository, req.Commit, req.ReportID).
 		Body(c.helper.BuildReport(req)).
@@ -101,6 +106,7 @@ func (c *CloudAPIClient) CreateOrUpdateReport(ctx context.Context, req *ReportRe
 
 // CreateOrUpdateAnnotations creates or updates annotations
 func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *AnnotationsRequest) error {
+
 	_, resp, err := c.cli.ReportsApi.
 		BulkCreateOrUpdateAnnotations(ctx, req.Owner, req.Repository, req.Commit, req.ReportID).
 		Body(c.helper.BuildAnnotations(req.Comments)).

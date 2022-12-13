@@ -14,7 +14,6 @@ type CloudAPIHelper struct{}
 // BuildReport builds Code Insights API report object
 func (c *CloudAPIHelper) BuildReport(req *ReportRequest) bbapi.Report {
 	data := bbapi.NewReport()
-	data.SetType("report")
 	data.SetTitle(req.Title)
 	data.SetReportType(req.Type)
 	data.SetReporter(req.Reporter)
@@ -40,7 +39,6 @@ func (c *CloudAPIHelper) buildAnnotation(comment *reviewdog.Comment) bbapi.Repor
 	const MAX_SUMMARY_LENGTH = 450
 
 	data := bbapi.NewReportAnnotation()
-	data.SetType("annotation") // anything not an empty string
 	data.SetExternalId(externalIDFromDiagnostic(comment.Result.Diagnostic))
 	data.SetAnnotationType(annotationTypeCodeSmell)
 	summary := comment.Result.Diagnostic.GetMessage()
