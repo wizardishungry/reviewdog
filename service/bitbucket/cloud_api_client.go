@@ -88,18 +88,11 @@ func NewCloudAPIClientWithConfigurations(client *http.Client, server bbapi.Serve
 // CreateOrUpdateReport creates or updates specified report
 func (c *CloudAPIClient) CreateOrUpdateReport(ctx context.Context, req *ReportRequest) error {
 
-	respDelete, errDelete := c.cli.
-		ReportsApi.DeleteReport(ctx, req.Owner, req.Repository, req.Commit, req.ReportID).
-		Execute()
-
-	var s string
-	if errDelete != nil {
-		b, err := io.ReadAll(respDelete.Body)
-		if err != nil {
-			s = string(b)
-		}
+	// We need to drop report and delete all annotations created previously
+	err := c.deleteReport(ctx, req)
+	if err != nil {
+		return err
 	}
-	fmt.Println("delete said", respDelete.Status, errDelete, s)
 
 	_, resp, err := c.cli.
 		ReportsApi.CreateOrUpdateReport(ctx, req.Owner, req.Repository, req.Commit, req.ReportID).
@@ -127,6 +120,18 @@ func (c *CloudAPIClient) CreateOrUpdateAnnotations(ctx context.Context, req *Ann
 			fmt.Println("body is", string(bodyErr.Body()))
 		}
 		return fmt.Errorf("failed to create code insights annotations (%s): %w %T", resp.Request.URL, err, err)
+	}
+
+	return nil
+}
+
+func (c *CloudAPIClient) deleteReport(ctx context.Context, report *ReportRequest) error {
+	resp, err := c.cli.ReportsApi.
+		DeleteReport(ctx, report.Owner, report.Repository, report.Commit, report.ReportID).
+		Execute()
+
+	if err := c.checkAPIError(err, resp, http.StatusNoContent); err != nil {
+		return fmt.Errorf("failed to delete code insights report: %w", err)
 	}
 
 	return nil

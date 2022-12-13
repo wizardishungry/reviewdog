@@ -39,4 +39,6 @@ const (
 	// reportDataTypeNumber     = "NUMBER"
 	// reportDataTypePercentage = "PERCENTAGE"
 	// reportDataTypeText       = "TEXT"
+
+	MAX_SUMMARY_LENGTH = 450
 )

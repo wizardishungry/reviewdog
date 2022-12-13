@@ -35,9 +35,6 @@ func (c *CloudAPIHelper) BuildAnnotations(comments []*reviewdog.Comment) []bbapi
 }
 
 func (c *CloudAPIHelper) buildAnnotation(comment *reviewdog.Comment) bbapi.ReportAnnotation {
-
-	const MAX_SUMMARY_LENGTH = 450
-
 	data := bbapi.NewReportAnnotation()
 	data.SetExternalId(externalIDFromDiagnostic(comment.Result.Diagnostic))
 	data.SetAnnotationType(annotationTypeCodeSmell)
