@@ -31,6 +31,8 @@ func (c *CloudAPIHelper) BuildAnnotations(comments []*reviewdog.Comment) []bbapi
 		annotations[idx] = c.buildAnnotation(comment)
 	}
 
+	fmt.Println("len(annotations)", len(annotations))
+
 	return annotations
 }
 
