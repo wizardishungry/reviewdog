@@ -88,9 +88,18 @@ func NewCloudAPIClientWithConfigurations(client *http.Client, server bbapi.Serve
 // CreateOrUpdateReport creates or updates specified report
 func (c *CloudAPIClient) CreateOrUpdateReport(ctx context.Context, req *ReportRequest) error {
 
-	_, _ = c.cli.
+	respDelete, errDelete := c.cli.
 		ReportsApi.DeleteReport(ctx, req.Owner, req.Repository, req.Commit, req.ReportID).
 		Execute()
+
+	var s string
+	if errDelete != nil {
+		b, err := io.ReadAll(respDelete.Body)
+		if err != nil {
+			s = string(b)
+		}
+	}
+	fmt.Println("delete said", respDelete.Status, errDelete, s)
 
 	_, resp, err := c.cli.
 		ReportsApi.CreateOrUpdateReport(ctx, req.Owner, req.Repository, req.Commit, req.ReportID).
