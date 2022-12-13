@@ -43,8 +43,8 @@ func (c *CloudAPIHelper) buildAnnotation(comment *reviewdog.Comment) bbapi.Repor
 	data.SetType("annotation") // anything not an empty string
 	data.SetExternalId(externalIDFromDiagnostic(comment.Result.Diagnostic))
 	data.SetAnnotationType(annotationTypeCodeSmell)
-	summary := comment.Result.Diagnostic.GetMessage()[:MAX_SUMMARY_LENGTH]
-	if len(summary) < MAX_SUMMARY_LENGTH {
+	summary := comment.Result.Diagnostic.GetMessage()
+	if len(summary) > MAX_SUMMARY_LENGTH {
 		summary = summary[:MAX_SUMMARY_LENGTH]
 	}
 	data.SetSummary(summary)
